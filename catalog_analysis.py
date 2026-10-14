@@ -156,3 +156,36 @@ def count_long_movies(movies, threshold=120):
             count += 1
     return count
 
+
+def count_by_genre(movies) -> dict:
+    """Подсчитывает количество фильмов по каждому жанру.
+    Используется цикл и `dict.get()` без `collections.Counter`.
+    """
+    genre_counts = {}
+    for movie in movies:
+        for genre in movie.get('genres', []):
+            genre_counts[genre] = genre_counts.get(genre, 0) + 1
+    return genre_counts
+
+
+def actor_filmography(movies) -> dict:
+    """Возвращает словарь, где ключ – имя актёра, а значение – список названий фильмов,
+    в которых он/она снялся(ась).
+    """
+    filmography = {}
+    for movie in movies:
+        title = movie.get('title', '')
+        for actor in movie.get('actors', []):
+            current = filmography.get(actor, [])
+            current.append(title)
+            filmography[actor] = current
+    return filmography
+
+
+def titles_above_average(movies) -> dict:
+    """Генератор словаря `{title: rating}` для фильмов с рейтингом выше среднего.
+    Среднее рассчитывается функцией `average_rating`.
+    """
+    avg = average_rating(movies)
+    return {movie.get('title', ''): movie.get('rating', 0) for movie in movies if movie.get('rating', 0) > avg}
+
