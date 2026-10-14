@@ -182,13 +182,6 @@ def actor_filmography(movies) -> dict:
     return filmography
 
 
-def titles_above_average(movies) -> dict:
-    """Генератор словаря `{title: rating}` для фильмов с рейтингом выше среднего.
-    Среднее рассчитывается функцией `average_rating`.
-    """
-    avg = average_rating(movies)
-    return {movie.get('title', ''): movie.get('rating', 0) for movie in movies if movie.get('rating', 0) > avg}
-
 
 def all_genres(movies) -> set:
     """Возвращает множество всех уникальных жанров каталога."""
@@ -212,3 +205,18 @@ def genres_only_in_one(movies_a, movies_b) -> set:
     for movie in movies_b:
         genres_b.update(movie.get('genres', []))
     return genres_a - genres_b
+
+def iter_high_rated(movies, min_rating=8.0):
+    """Генератор, лениво выдающий фильмы с рейтингом >= `min_rating`.
+    Пример использования:
+        for movie in iter_high_rated(movies):
+            print(format_report_line(movie))
+    """
+    for movie in movies:
+        if movie.get('rating', 0) >= min_rating:
+            yield movie
+
+
+
+# Пример суммирования длительности всех фильмов с рейтингом выше 7 (генераторное выражение)
+# total_minutes = sum(m['duration_min'] for m in movies if m.get('rating', 0) > 7)
