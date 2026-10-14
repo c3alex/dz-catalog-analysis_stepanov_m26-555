@@ -130,6 +130,22 @@ while index < len(movies):
 else:
     print("Шедевров не найдено (вторая проверка)")
 
+def top_n_by_rating(movies, n=3) -> list:
+    """Возвращает список из `n` кортежей (title, rating) топ‑фильмов по рейтингу.
+    Сортировка делается через `sorted` с `key=lambda m: m.get('rating', 0)`.
+    """
+    # Сортируем копию списка, не меняя оригинал
+    sorted_movies = sorted(movies, key=lambda m: m.get('rating', 0), reverse=True)
+    # Формируем список из первых n элементов в виде кортежей
+    return [(movie.get('title', ''), movie.get('rating', 0)) for movie in sorted_movies[:n]]
+
+def titles_sorted_by_rating(movies) -> list:
+    """Возвращает список названий фильмов, отсортированных по убыванию рейтинга.
+    Исходный список `movies` не изменяется.
+    """
+    sorted_movies = sorted(movies, key=lambda m: m.get('rating', 0), reverse=True)
+    return [movie.get('title', '') for movie in sorted_movies]
+
 def count_long_movies(movies, threshold=120):
     """Подсчитывает количество фильмов длительностью более *threshold* минут.
     Делается через простой цикл for и накопительную переменную.
