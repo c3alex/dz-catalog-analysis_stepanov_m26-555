@@ -59,3 +59,42 @@ def duration_in_hours(minutes):
     hours = minutes // 60
     mins = minutes % 60
     return f"{hours}ч {mins}м"
+
+
+def rating_tier(rating):
+    """Возвращает категорию фильма по его оценке.
+    
+    • "шедевр" – rating ≥ 9
+    • "хорошо"  – 7 ≤ rating < 9
+    • "средне" – 5 ≤ rating < 7
+    • "слабо"   – rating < 5
+    
+    Реализовано через if/elif, внутри используется тернарный оператор.
+    """
+    if rating >= 9:
+        return "шедевр"
+    elif rating >= 7:
+        # Тернарный оператор в качестве примера; здесь он просто возвращает строку "хорошо"
+        return "хорошо" if rating < 8.5 else "хорошо"
+    elif rating >= 5:
+        return "средне"
+    else:
+        return "слабо"
+
+
+def decade_label(year):
+    """Возвращает метку в зависимости от года выпуска фильма.
+    
+    • "новые"    – после 2020 года (year > 2020)
+    • "недавние" – 2015‑2020 включительно
+    • "старые"   – до 2015 года (year < 2015)
+    
+    Реализовано через оператор match с условиями ``case _ if ...``.
+    """
+    match year:
+        case _ if year > 2020:
+            return "новые"
+        case _ if 2015 <= year <= 2020:
+            return "недавние"
+        case _:
+            return "старые"
