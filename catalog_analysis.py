@@ -60,6 +60,27 @@ def duration_in_hours(minutes):
     mins = minutes % 60
     return f"{hours}ч {mins}м"
 
+def normalize_title(title: str) -> str:
+    """Приводит строку к формату Title Case без использования str.title()."""
+    words = title.split()
+    title_cased = [word[0].upper() + word[1:] if word else '' for word in words]
+    return ' '.join(title_cased)
+
+def make_slug(title: str) -> str:
+    """Создаёт слаг из нормализованного названия."""
+    return title.lower().replace(' ', '-')
+
+def format_report_line(movie: dict) -> str:
+    """Формирует строку‑отчёт о фильме."""
+    title = normalize_title(movie.get('title', ''))
+    year = movie.get('year', '')
+    rating = movie.get('rating', 0)
+    duration = duration_in_hours(movie.get('duration_min', 0))
+    genres = sorted(movie.get('genres', []))
+    genres_str = ', '.join(genres)
+    return f'"{title}" ({year}) — {rating}/10, {duration}, жанры: {genres_str}'
+
+
 
 def rating_tier(rating):
     """Возвращает категорию фильма по его оценке.
@@ -93,7 +114,7 @@ for movie in movies:
 index = 0
 while index < len(movies):
     if movies[index].get("rating", 0) > 9.0:
-        print(f"Первый шедевр: {movies[index]["title"]}")
+        print(f"Первый шедевр: {movies[index]['title']}")
         break
     index += 1
 else:
