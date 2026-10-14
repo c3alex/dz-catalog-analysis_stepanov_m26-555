@@ -81,20 +81,41 @@ def rating_tier(rating):
     else:
         return "слабо"
 
+# Демонстрация работы с циклами
 
-def decade_label(year):
-    """Возвращает метку в зависимости от года выпуска фильма.
-    
-    • "новые"    – после 2020 года (year > 2020)
-    • "недавние" – 2015‑2020 включительно
-    • "старые"   – до 2015 года (year < 2015)
-    
-    Реализовано через оператор match с условиями ``case _ if ...``.
+# 1. for с continue – выводим названия фильмов, не относящихся к жанру "comedy"
+for movie in movies:
+    if "comedy" in movie.get("genres", set()):
+        continue
+    print(movie["title"])
+
+# 2. while с break – ищем первый фильм с рейтингом выше 9.0
+index = 0
+while index < len(movies):
+    if movies[index].get("rating", 0) > 9.0:
+        print(f"Первый шедевр: {movies[index]["title"]}")
+        break
+    index += 1
+else:
+    print("Шедевров не найдено")
+
+# 2b. while с break, но условие заведомо невозможно – демонстрируем ветку else
+index = 0
+while index < len(movies):
+    if movies[index].get("rating", 0) > 10.0:  # такого фильма нет
+        print(f"Найдено: {movies[index]["title"]}")
+        break
+    index += 1
+else:
+    print("Шедевров не найдено (вторая проверка)")
+
+def count_long_movies(movies, threshold=120):
+    """Подсчитывает количество фильмов длительностью более *threshold* минут.
+    Делается через простой цикл for и накопительную переменную.
     """
-    match year:
-        case _ if year > 2020:
-            return "новые"
-        case _ if 2015 <= year <= 2020:
-            return "недавние"
-        case _:
-            return "старые"
+    count = 0
+    for movie in movies:
+        if movie.get("duration_min", 0) > threshold:
+            count += 1
+    return count
+
