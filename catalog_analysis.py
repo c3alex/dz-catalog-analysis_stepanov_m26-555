@@ -216,7 +216,45 @@ def iter_high_rated(movies, min_rating=8.0):
         if movie.get('rating', 0) >= min_rating:
             yield movie
 
-
-
 # Пример суммирования длительности всех фильмов с рейтингом выше 7 (генераторное выражение)
 # total_minutes = sum(m['duration_min'] for m in movies if m.get('rating', 0) > 7)
+
+def build_report(movies):
+    """Выводит единый консольный отчёт по каталогу.
+    Формат соответствует требованию задачи.
+    """
+    # 1. Общая статистика
+    avg_rating = average_rating(movies)
+    # catalog_age_stats возвращает (oldest, newest, average_age_ceil)
+    _, _, avg_age = catalog_age_stats(movies)
+
+    # 2. Топ‑3 фильма
+    top3 = top_n_by_rating(movies, n=3)
+    top3_lines = []
+    for title, rating in top3:
+        film = next((m for m in movies if m.get('title') == title), None)
+        if film:
+            top3_lines.append(f"  {format_report_line(film)}")
+
+    # 3. Количество фильмов по жанрам – сортируем по убыванию количества
+    genre_counts = count_by_genre(movies)
+    sorted_genres = sorted(genre_counts.items(), key=lambda item: item[1], reverse=True)
+    genre_lines = [f"  {genre} — {count}" for genre, count in sorted_genres]
+
+    # 4. Список всех уникальных жанров – в алфавитном порядке
+    all_genres_set = all_genres(movies)
+    all_genres_list = sorted(all_genres_set)
+    all_genres_str = ", ".join(all_genres_list)
+
+    # Формируем и выводим отчёт
+    print("ОТЧЕТ ПО КАТАЛОГУ")
+    print(f"Средний рейтинг: {avg_rating}")
+    print(f"Средний возраст фильмов: {avg_age} лет\n")
+    print("Топ-3 фильма:")
+    for line in top3_lines:
+        print(line)
+    print("\nФильмов по жанрам:")
+    for line in genre_lines:
+        print(line)
+    print("\nВсе жанры каталога: " + all_genres_str)
+
